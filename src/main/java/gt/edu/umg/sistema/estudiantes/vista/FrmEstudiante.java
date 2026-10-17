@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gt.edu.umg.sistema.estudiantes.vista;
 
 import gt.edu.umg.sistema.estudiantes.controlador.EstudianteController;
@@ -14,17 +10,26 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author maorozco
  */
-public class FrmEstudiante extends javax.swing.JFrame {
-    
+public class FrmEstudiante extends javax.swing.JInternalFrame {
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmEstudiante.class.getName());
 
     EstudianteController controller;
+
     /**
      * Creates new form FrmEstudiante
      */
     public FrmEstudiante() {
         initComponents();
-        controller = new EstudianteController(); 
+        controller = new EstudianteController();
+
+        // Configuración para ventana interna dentro de un JDesktopPane
+        this.setClosable(true);
+        this.setIconifiable(true);
+        this.setMaximizable(true);
+        this.setResizable(true);
+        this.setTitle("Gestión de Estudiantes");
+
         refrescarTabla();
     }
 
@@ -50,8 +55,6 @@ public class FrmEstudiante extends javax.swing.JFrame {
         BtnGrabar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Id");
 
@@ -149,56 +152,55 @@ public class FrmEstudiante extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
     public void cargarDatosTabla(List<Estudiante> listaEstudiantes) {
-    // 1. Definir los encabezados de las columnas
-    String[] columnas = {"ID", "Nombre", "Apellido", "Correo"}; 
-    
-    // 2. Crear el modelo (bloqueando la edición directa si lo deseas)
-    DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false; // Evita que el usuario edite las celdas directamente
-        }
-    };
+        // Se definen los 5 encabezados para coincidir con la fila de datos
+        String[] columnas = {"ID", "Nombre", "Apellido", "Carnet", "Correo"}; 
 
-    // 3. Recorrer la lista y agregar cada estudiante como una fila
-    for (Estudiante est : listaEstudiantes) {
-        Object[] fila = {
-            est.getId(),       // Asegúrate de que coincida con tus getters
-            est.getNombres(),
-            est.getApellidos(),
-            est.getCarnet(),
-            est.getEmail()
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
-        modelo.addRow(fila);
+
+        for (Estudiante est : listaEstudiantes) {
+            Object[] fila = {
+                est.getId(),
+                est.getNombres(),
+                est.getApellidos(),
+                est.getCarnet(),
+                est.getEmail()
+            };
+            modelo.addRow(fila);
+        }
+
+        jTable1.setModel(modelo);
     }
 
-    // 4. Asignar el modelo a tu JTable (reemplaza 'jtEstudiantes' por el nombre de tu variable)
-    jTable1.setModel(modelo);
-}
-    
-    private void BtnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGrabarActionPerformed
-        // TODO add your handling code here:
-        Estudiante estudiante = new Estudiante();
-        estudiante.setId(Integer.parseInt(txtId.getText()));
-        estudiante.setNombres(txtNombres.getText());
-        estudiante.setApellidos(txtApellidos.getText());
-        estudiante.setCarnet(txtCarnet.getText());
-        estudiante.setEmail(txtEmail.getText());
-      
-        
-        controller.Guardar(estudiante); 
-            
+    private void BtnGrabarActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        try {
+            if (txtId.getText().trim().isEmpty() || txtNombres.getText().trim().isEmpty() || txtCarnet.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El ID, Nombres y Carnet son requeridos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            Estudiante estudiante = new Estudiante();
+            estudiante.setId(Integer.parseInt(txtId.getText().trim()));
+            estudiante.setNombres(txtNombres.getText().trim());
+            estudiante.setApellidos(txtApellidos.getText().trim());
+            estudiante.setCarnet(txtCarnet.getText().trim());
+            estudiante.setEmail(txtEmail.getText().trim());
+
+            controller.Guardar(estudiante); 
+
             JOptionPane.showMessageDialog(this, "Estudiante grabado con éxito.");
-            
-            // Limpiar campos y refrescar los datos mostrados en el JTable
+
             limpiarCampos();
             refrescarTabla();
-        
-      cargarDatosTabla(controller.GetEstudiantes());
-        
-    }//GEN-LAST:event_BtnGrabarActionPerformed
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El ID debe ingresar solo valores numéricos enteros.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+        }
+    }                                         
 
     private void limpiarCampos() {
         txtId.setText("");
@@ -206,39 +208,15 @@ public class FrmEstudiante extends javax.swing.JFrame {
         txtApellidos.setText("");
         txtEmail.setText("");
         txtCarnet.setText("");
+        txtId.requestFocus();
     }
-    
-    private void refrescarTabla() 
-    {try {
-            // Ajusta 'listar()' por el nombre del método de tu EstudianteController que devuelve la listaList lista = controller.listar();
+
+    private void refrescarTabla() {
+        try {
             cargarDatosTabla(controller.GetEstudiantes());
         } catch (Exception e) {
             logger.severe("No se pudo cargar la lista de estudiantes: " + e.getMessage());
-        }}
-      
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmEstudiante().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -4,8 +4,8 @@
 
 package gt.edu.umg.sistema.estudiantes;
 
-import gt.edu.umg.sistema.estudiantes.vista.FrmEstudiante;
-import javax.swing.JFrame;
+import gt.edu.umg.sistema.estudiantes.vista.FrmMenuPrincipal; // O el nombre de tu ventana principal/MDI
+
 
 /**
  *
@@ -14,19 +14,10 @@ import javax.swing.JFrame;
 public class SistemaEstudiantes {
 
     public static void main(String[] args) {
-//       JFrame ventana = new JFrame();
-//        
-//       ventana.setTitle("Mi primera ventana");
-//       ventana.setSize(500, 300);
-//       ventana.setLocationRelativeTo(null);
-//       ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//       ventana.setVisible(true);
-       //System.out.println("Hello World!");
-       
-       
-       FrmEstudiante ventana = new FrmEstudiante();
-       ventana.setLocationRelativeTo(null);
-       ventana.setVisible(true);
-       
+//{
+        // Ejecutamos la ventana principal del sistema (JFrame)
+        FrmMenuPrincipal menuPrincipal = new FrmMenuPrincipal();
+        menuPrincipal.setLocationRelativeTo(null); // Centra el JFrame principal en la pantalla
+        menuPrincipal.setVisible(true);
     }
 }

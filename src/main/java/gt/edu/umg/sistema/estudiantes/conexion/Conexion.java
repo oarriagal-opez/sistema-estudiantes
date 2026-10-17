@@ -6,26 +6,28 @@ import java.sql.SQLException;
 
 public class Conexion {
 
-    private static final String URL =
-            "jdbc:mysql://localhost:3306/Sistema_estudiantes";
+    private static final String URL = 
+            "jdbc:mysql://localhost:3306/sistema_estudiantes?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
     private static final String USUARIO = "root";
-
-    private static final String PASSWORD = "1234";
+    private static final String PASSWORD = "Izquierdo";
 
     public static Connection conectar() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Error al cargar el driver JDBC: " + e.getMessage());
+        }
         return DriverManager.getConnection(URL, USUARIO, PASSWORD);
     }
 
     public static void main(String[] args) {
-
-        try {
-            Connection conexion = conectar();
-            System.out.println("Conexión exitosa a la base de datos.");
-            conexion.close();
-
+        try (Connection conexion = conectar()) {
+            if (conexion != null) {
+                System.out.println("¡Conexión exitosa a la base de datos MySQL!");
+            }
         } catch (SQLException e) {
-            System.out.println("Error de conexión: " + e.getMessage());
+            System.err.println("Error de conexión: " + e.getMessage());
         }
     }
 }

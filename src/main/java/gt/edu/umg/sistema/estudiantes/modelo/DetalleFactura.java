@@ -1,33 +1,24 @@
 package gt.edu.umg.sistema.estudiantes.modelo;
 
 public class DetalleFactura {
-    private String producto;
+    private Producto producto;
     private int cantidad;
-    private double precio;
-    private double subtotal;
+    private double precioUnitario;
 
-    public DetalleFactura(String producto, int cantidad, double precio) {
+    public DetalleFactura(Producto producto, int cantidad, double precioUnitario) {
         this.producto = producto;
         this.cantidad = cantidad;
-        this.precio = precio;
-        this.subtotal = cantidad * precio;
+        this.precioUnitario = precioUnitario;
     }
 
-    // Getters y Setters
-    public String getProducto() { return producto; }
-    public void setProducto(String producto) { this.producto = producto; }
-
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
     public int getCantidad() { return cantidad; }
-    public void setCantidad(int cantidad) { 
-        this.cantidad = cantidad; 
-        this.subtotal = this.cantidad * this.precio;
-    }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+    public double getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
 
-    public double getPrecio() { return precio; }
-    public void setPrecio(double precio) { 
-        this.precio = precio; 
-        this.subtotal = this.cantidad * this.precio;
+    public double calcularSubtotal() {
+        return cantidad * precioUnitario;
     }
-
-    public double getSubtotal() { return subtotal; }
 }
